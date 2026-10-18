@@ -2,7 +2,7 @@
 name: img2flutterscene
 description: Turn an object or character reference image into a quality-gated, procedural flutter_scene (Flutter GPU) model built in Dart code. Use for image-to-3D reconstruction into a Flutter app or game, sculpt specs, and staged Dart code generation with screenshot-reviewed passes.
 license: Apache-2.0
-version: 0.1.0
+version: 0.2.0
 ---
 
 # img2flutterscene — Image to procedural flutter_scene
@@ -60,6 +60,27 @@ Sculpt from a photo, in order — never one-shot a mesh:
 
 State explicitly when output is approximate/stylized/low-poly. A single image cannot reveal
 hidden sides or guarantee exact geometry — say so instead of faking confidence.
+
+## Local work: a user's model never lands in tracked files
+
+Every reconstruction for a user lives in its own folder under `work/` (gitignored), so their models
+never conflict with a `git pull` of this skill:
+
+```text
+work/<id>/reference.<ext>          the input image
+work/<id>/.img2threejs/state.json  the local state gate (pass it as --state)
+work/<id>/object-sculpt-spec.json  the spec, with intake/assessment files beside it
+work/<id>/model.scene.json         the preview: generate_flutter_scene.py --format scene-json
+work/<id>/model.dart               the Dart factory to ship in an app
+work/<id>/shots/                   lab captures
+```
+
+- Do not register a user's model in `lab/lib/models/` or edit any other tracked file for it. The lab
+  and the util app load `model.scene.json` directly; refresh it after every generation.
+- `tool/img2flutterscene_util` (a macOS app) runs this skill headlessly with `claude -p` for an image
+  the user picked. In those runs nobody can answer a question: on a hard stop or anything needing the
+  user, stop and say exactly what is needed in the final message.
+- Only commit a model to the repo (under `lab/`) when the user explicitly asks to ship it as a sample.
 
 ## Mandatory Local State Gate
 
@@ -224,8 +245,9 @@ Full flags: `grimoire/scripts.md`. Never let a script *score* visuals — that i
    authored/unwrapped `uvStrategy`. Offline LOD tiers:
    `forge/stage3_build/decimate.py <mesh.json> --ratio <r> --json`.
 7. Render the current pass in the lab and capture it:
-   `scripts/lab_shot.sh <id> <pass> 0,90,180,270 <out_dir> [dark|mid|light]` (one launch, every
-   angle; yaw 90 = the model's own right side). Read every PNG back before using it. The lab, the
+   `scripts/lab_shot.sh work/<id>/model.scene.json <pass> 0,90,180,270 work/<id>/shots [dark|mid|light]`
+   (one launch, every angle; yaw 90 = the model's own right side; a registered lab id works in place
+   of the scene file). Read every PNG back before using it. The lab, the
    coordinate frame and capture rules: `grimoire/build/flutter_scene_target.md`.
 7a. **Off-axis and placement gates — a single review viewpoint is not evidence about the model.**
    Capture a turntable, not one frame, and run all three; each catches a defect class the older

@@ -4,6 +4,8 @@ Ordered by what unblocks real reconstructions soonest. Each item moves a row in 
 nothing here is implemented until that ledger says so.
 
 ## M1 — first real reconstruction end to end
+- Convert a real photo in the util app end to end and fix what the headless run trips over
+  (permissions it needed, questions it tried to ask, preview refresh timing).
 - Run one subject through the whole loop on this target: intake → spec → generate → lab shots →
   `diagnose_render.py` / `turntable_gate.py` / comparison sheet → `append_review.py`, and record
   what breaks.

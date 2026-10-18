@@ -17,6 +17,9 @@ import 'models/models.dart';
 ///
 /// Run: `flutter run -d macos` (from lab/), or `../scripts/lab_shot.sh`.
 ///   `--dart-define=MODEL=id`         start on a model (lib/models/models.dart)
+///   `--dart-define=SCENE=path`       load a scene-json file instead (local
+///                                    work in `work/id/`, never registered);
+///                                    `--dart-define=REF=path` sets its reference
 ///   `--dart-define=ANGLE=deg`        model yaw: 0 front, 90 its right side,
 ///                                    180 rear, 270 its left side
 ///   `--dart-define=ELEVATION=deg`    camera height above the model (default 12)
@@ -55,7 +58,7 @@ class _Lab extends StatefulWidget {
 class _LabState extends State<_Lab> {
   late String _id = () {
     const start = String.fromEnvironment('MODEL');
-    return labModelById(start) != null ? start : labModels.first.id;
+    return labModelById(start) != null ? start : allLabModels.first.id;
   }();
   bool _spin = false;
   bool _explode = false;
@@ -112,6 +115,7 @@ class _LabState extends State<_Lab> {
   Widget build(BuildContext context) {
     final model = labModelById(_id)!;
     final ref = model.reference;
+    final refFile = model.referenceFile;
     final view = _ModelView(
       key: ValueKey('$_id/$_generation'),
       model: model,
@@ -147,9 +151,11 @@ class _LabState extends State<_Lab> {
                                 padding: const EdgeInsets.all(12),
                                 child: _labelled(
                                   'Reference',
-                                  ref == null
-                                      ? const Center(child: Text('No reference image'))
-                                      : Image.asset(ref, fit: BoxFit.contain),
+                                  refFile != null
+                                      ? Image.file(File(refFile), fit: BoxFit.contain)
+                                      : ref != null
+                                      ? Image.asset(ref, fit: BoxFit.contain)
+                                      : const Center(child: Text('No reference image')),
                                 ),
                               ),
                             ),
@@ -187,7 +193,7 @@ class _LabState extends State<_Lab> {
       spacing: 8,
       runSpacing: 6,
       children: [
-        for (final m in labModels)
+        for (final m in allLabModels)
           ChoiceChip(label: Text(m.name), selected: m.id == _id, onSelected: (_) => setState(() => _id = m.id)),
       ],
     ),

@@ -33,7 +33,7 @@ void main() {
     expect(world.z, closeTo(-3, 1e-6));
   });
 
-  test('explode pushes top-level parts along their rest offset and back', () {
+  test('explode pushes parts along their rest offset and back', () {
     final m = model();
     m.explode(1);
     final p = m.nodes['part']!.position;
@@ -42,5 +42,28 @@ void main() {
     expect((p - rest).normalized().dot(rest.normalized()), closeTo(1, 1e-6));
     m.explode(0);
     expect((m.nodes['part']!.position - rest).length, closeTo(0, 1e-6));
+  });
+
+  test('explode reaches nested parts, which carry their parents along', () {
+    final root = Node(name: 'm');
+    final body = Node(name: 'body');
+    final lid = Node(name: 'lid')..position = vm.Vector3(0, 1, 0);
+    final hinge = Node(name: 'hinge');
+    root.add(body);
+    body.add(lid);
+    lid.add(hinge);
+    final m = SculptModel(
+      root: root,
+      nodes: {'body': body, 'lid': lid, 'hinge': hinge},
+      components: {
+        'body': const SculptComponent(id: 'body', name: 'body', role: 'body'),
+        'lid': const SculptComponent(id: 'lid', name: 'lid', role: 'lid', parent: 'body'),
+        'hinge': const SculptComponent(id: 'hinge', name: 'hinge', role: 'hinge', parent: 'lid'),
+      },
+    );
+    m.explode(0.5);
+    expect(lid.position.y, closeTo(1.5, 1e-6), reason: 'a child of the only top-level part still moves');
+    expect(body.position.length, 0, reason: 'a part at its parent origin has no direction to move in');
+    expect(hinge.position.length, 0);
   });
 }

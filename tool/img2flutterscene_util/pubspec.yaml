@@ -1,0 +1,23 @@
+name: img2flutterscene_util
+description: "Desktop companion for img2flutterscene: pick an image, convert it with the skill through Claude Code, and inspect the model live."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.13.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_scene: ^0.24.3
+  vector_math: ^2.4.3
+  img2flutterscene:
+    path: ../../runtime
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

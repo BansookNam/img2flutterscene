@@ -1,0 +1,422 @@
+{
+  "format": "img2flutterscene.scene/1",
+  "target": "TradeIt Hard Case",
+  "factory": "createTradeItHardCaseModel",
+  "spec": "sample_hard_case.json",
+  "pass": "form-refinement",
+  "omitted": [
+    "repetitionSystems (instancing is not ported yet)"
+  ],
+  "unapplied": [
+    "root: geometryDescriptor.edgeTreatment",
+    "root: geometryDescriptor.deformationStack",
+    "root: localFeatures (detail inventory is not modelled yet)",
+    "lid: geometryDescriptor.edgeTreatment",
+    "lid: localFeatures (detail inventory is not modelled yet)",
+    "lidRidge: geometryDescriptor.edgeTreatment",
+    "lidFastener: geometryDescriptor.edgeTreatment",
+    "latch: geometryDescriptor.edgeTreatment",
+    "latchCam: geometryDescriptor.edgeTreatment",
+    "latchBail: geometryDescriptor.edgeTreatment",
+    "sideHandle: geometryDescriptor.edgeTreatment",
+    "sideHandle: localFeatures (detail inventory is not modelled yet)",
+    "haspLoop: geometryDescriptor.edgeTreatment",
+    "padlock: geometryDescriptor.edgeTreatment",
+    "padlockBody: geometryDescriptor.edgeTreatment",
+    "padlockShackle: geometryDescriptor.edgeTreatment"
+  ],
+  "materials": {
+    "brassPlated": {
+      "metallic": 0.75,
+      "roughness": 0.3
+    },
+    "hardwareSatin": {
+      "metallic": 0.78,
+      "roughness": 0.35
+    },
+    "shellMatte": {
+      "metallic": 0.0,
+      "roughness": 0.62
+    },
+    "steelSatin": {
+      "metallic": 0.85,
+      "roughness": 0.3
+    }
+  },
+  "components": [
+    {
+      "id": "root",
+      "name": "Body shell",
+      "role": "body",
+      "parent": null,
+      "kind": "box",
+      "position": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "shellMatte",
+      "color": "0xFF212327",
+      "geometry": {
+        "op": "box",
+        "seg": 12
+      },
+      "scale": [
+        1.0,
+        0.46,
+        0.78
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "lid",
+      "name": "Lid",
+      "role": "hinge-lid",
+      "parent": "root",
+      "kind": "box",
+      "position": [
+        0.0,
+        0.31,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "shellMatte",
+      "color": "0xFF212327",
+      "geometry": {
+        "op": "box",
+        "seg": 12
+      },
+      "scale": [
+        1.02,
+        0.16,
+        0.7956
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "lidRidge",
+      "name": "Lid stiffening ridge (repetition template)",
+      "role": "surface-relief-band",
+      "parent": "lid",
+      "kind": "box",
+      "position": [
+        0.0,
+        0.37,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        1.5708
+      ],
+      "material": "shellMatte",
+      "color": "0xFF212327",
+      "geometry": {
+        "op": "box",
+        "seg": 12
+      },
+      "scale": [
+        0.7176,
+        0.012,
+        0.03
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "lidFastener",
+      "name": "Lid edge rivet/screw head (repetition template)",
+      "role": "fastener",
+      "parent": "lid",
+      "kind": "attachment frustum",
+      "position": [
+        -0.39,
+        0.0,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "hardwareSatin",
+      "color": "0xFF8C8E92",
+      "geometry": {
+        "op": "frustum",
+        "halfLength": 0.39,
+        "baseRadius": 0.06,
+        "endRadius": 0.033,
+        "seg": 32
+      },
+      "scale": null,
+      "meshPosition": [
+        0.39,
+        0.0,
+        0.0
+      ],
+      "meshRotation": [
+        0.0,
+        0.0,
+        -0.707107,
+        0.707107
+      ]
+    },
+    {
+      "id": "latch",
+      "name": "Draw latch (left, repetition template)",
+      "role": "latch",
+      "parent": "root",
+      "kind": "box",
+      "position": [
+        -0.3,
+        0.21,
+        0.39
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "shellMatte",
+      "color": "0xFF212327",
+      "geometry": {
+        "op": "box",
+        "seg": 12
+      },
+      "scale": [
+        0.1,
+        0.09,
+        0.05
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "latchCam",
+      "name": "Latch cam body",
+      "role": "latch-cam",
+      "parent": "latch",
+      "kind": "box",
+      "position": [
+        0.0,
+        0.0,
+        0.01
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "shellMatte",
+      "color": "0xFF212327",
+      "geometry": {
+        "op": "box",
+        "seg": 12
+      },
+      "scale": [
+        0.1,
+        0.09,
+        0.04
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "latchBail",
+      "name": "Latch wire bail",
+      "role": "connector",
+      "parent": "latch",
+      "kind": "torus",
+      "position": [
+        0.0,
+        0.05,
+        0.015
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "hardwareSatin",
+      "color": "0xFF8C8E92",
+      "geometry": {
+        "op": "torus",
+        "tube": 0.08,
+        "seg": 96,
+        "tubeSeg": 24
+      },
+      "scale": [
+        0.09,
+        0.05,
+        0.01
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "sideHandle",
+      "name": "Side handle pocket",
+      "role": "handle-pocket",
+      "parent": "root",
+      "kind": "box",
+      "position": [
+        0.49,
+        0.13,
+        0.05
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "shellMatte",
+      "color": "0xFF212327",
+      "geometry": {
+        "op": "box",
+        "seg": 12
+      },
+      "scale": [
+        0.03,
+        0.1,
+        0.16
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "haspLoop",
+      "name": "Padlock hasp eyeloop",
+      "role": "socket",
+      "parent": "root",
+      "kind": "torus",
+      "position": [
+        0.12,
+        0.19,
+        0.39
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "hardwareSatin",
+      "color": "0xFF8C8E92",
+      "geometry": {
+        "op": "torus",
+        "tube": 0.08,
+        "seg": 96,
+        "tubeSeg": 24
+      },
+      "scale": [
+        0.03,
+        0.03,
+        0.01
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "padlock",
+      "name": "Padlock assembly",
+      "role": "appendage",
+      "parent": "haspLoop",
+      "kind": "box",
+      "position": [
+        0.12,
+        0.14,
+        0.4
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "brassPlated",
+      "color": "0xFFC9A227",
+      "geometry": {
+        "op": "box",
+        "seg": 12
+      },
+      "scale": [
+        0.05,
+        0.08,
+        0.02
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "padlockBody",
+      "name": "Padlock body",
+      "role": "lock-body",
+      "parent": "padlock",
+      "kind": "box",
+      "position": [
+        0.0,
+        -0.02,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "brassPlated",
+      "color": "0xFFC9A227",
+      "geometry": {
+        "op": "box",
+        "seg": 12
+      },
+      "scale": [
+        0.05,
+        0.06,
+        0.02
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    },
+    {
+      "id": "padlockShackle",
+      "name": "Padlock shackle",
+      "role": "shackle",
+      "parent": "padlock",
+      "kind": "torus",
+      "position": [
+        0.0,
+        0.02,
+        0.0
+      ],
+      "rotation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "material": "steelSatin",
+      "color": "0xFF9A9CA2",
+      "geometry": {
+        "op": "torus",
+        "tube": 0.08,
+        "seg": 96,
+        "tubeSeg": 24
+      },
+      "scale": [
+        0.03,
+        0.035,
+        0.01
+      ],
+      "meshPosition": null,
+      "meshRotation": null
+    }
+  ]
+}

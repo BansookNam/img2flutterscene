@@ -8,7 +8,7 @@ No mesh files. No textures. No downloaded art packs. Every part is generated geo
 pass and checked against the reference image before the next pass unlocks.
 
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-0.1.0-green.svg)](CHANGELOG.md)
+[![Version](https://img.shields.io/badge/version-0.2.0-green.svg)](CHANGELOG.md)
 [![Flutter](https://img.shields.io/badge/Flutter-3.47%2B%20%C2%B7%20Flutter%20GPU-02569B.svg?logo=flutter)](https://flutter.dev)
 [![flutter_scene](https://img.shields.io/badge/flutter__scene-0.24-0175C2.svg)](https://pub.dev/packages/flutter_scene)
 [![Tooling](https://img.shields.io/badge/tooling-Python%203.10%2B%20stdlib-3776ab.svg)](forge)
@@ -72,6 +72,27 @@ geometry:
   pivot.add(Node(name: 'Lid', mesh: Mesh(b.build(), materials['shellMatte']!)));
 }
 ```
+
+## Desktop app
+
+<img src="docs/images/util-app.png" alt="img2flutterscene util app" />
+
+`tool/img2flutterscene_util` is a macOS companion that does the whole loop: **New from image… →
+Convert**. It runs the skill through headless Claude Code, then lets you inspect the result live:
+
+- an orbit camera (drag, pan, zoom, preset views);
+- key light, ambient and exposure sliders;
+- inspection views (face orientation for winding, normals, part colours, roughness), wireframe,
+  and the reference beside the model or overlaid;
+- a parts tree with isolate, focus and explode;
+- vertices per part, and what the generator did **not** build.
+
+```bash
+cd tool/img2flutterscene_util && flutter run -d macos
+```
+
+Models you make live in `work/<id>/`, which is gitignored, so `git pull` never conflicts with your
+own work. Details: [`tool/img2flutterscene_util/README.md`](tool/img2flutterscene_util/README.md).
 
 ## How it works
 
@@ -151,6 +172,8 @@ Turn Flutter GPU on in your app the same way `lab/` does: `FLTEnableFlutterGPU` 
 | Hierarchy, pivots, explode, per-part metadata | ✅ |
 | PBR materials (albedo, metalness, roughness) | ✅ |
 | Lab: turntable, side-by-side with reference, scripted multi-angle capture | ✅ macOS |
+| Live preview without compiling (`--format scene-json` + runtime loader) | ✅ |
+| Desktop app: convert via Claude Code, orbit/light/inspection views, parts tree | ✅ macOS |
 | Image review gates (diagnose, multi-angle, turntable, comparison sheet) | ✅ shared, take lab PNGs |
 | Implicit SDF surfaces, sweeps, tubes | 🚧 runtime has the builders; generator not wired |
 | Instancing, subdivision, bevels, deformations, vertex paint | 🚧 not ported |
@@ -178,6 +201,8 @@ Details and the rest of the target's rules: [`grimoire/build/flutter_scene_targe
 | [`forge/stage3_build/generate_flutter_scene.py`](forge/stage3_build/generate_flutter_scene.py) | Spec → Dart flutter_scene factory |
 | [`runtime/`](runtime) | Dart package `img2flutterscene`: `PartBuilder`, unit primitives, `SculptModel` |
 | [`lab/`](lab) | Flutter app for matching a model to its reference and capturing review shots |
+| [`tool/img2flutterscene_util/`](tool/img2flutterscene_util) | macOS app: image → Convert (Claude Code) → live inspection |
+| `work/` | Your models, one folder each. Local and gitignored |
 | [`scripts/`](scripts) | `lab_shot.sh` (capture), `trace_silhouette.py` (silhouette trace + IoU) |
 | [`grimoire/`](grimoire) | Routed reference material for each pipeline stage |
 | [`MIGRATION.md`](MIGRATION.md) | What is ported, partial, or still three.js-only |
@@ -188,6 +213,7 @@ Details and the rest of the target's rules: [`grimoire/build/flutter_scene_targe
 python3 -m unittest discover -s forge/tests -p 'test_*.py'
 (cd runtime && flutter test && flutter analyze)
 (cd lab && flutter analyze)
+(cd tool/img2flutterscene_util && flutter test && flutter analyze)
 ```
 
 With `flutter` on the PATH, the Python suite also **compiles generated Dart** against `runtime/`.

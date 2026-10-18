@@ -39,3 +39,5 @@ jobs:
         run: cd runtime && flutter pub get && flutter analyze && flutter test
       - name: Lab
         run: cd lab && flutter pub get && flutter analyze
+      - name: Util app
+        run: cd tool/img2flutterscene_util && flutter pub get && flutter analyze && flutter test

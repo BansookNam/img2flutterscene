@@ -4,6 +4,9 @@
 #
 #   lab_shot.sh <model> <name> [angles=0] [out_dir=.] [backdrop=dark] [layout=model] [elevation=12]
 #
+#   model      a registered id (lab/lib/models/models.dart), or a scene-json file
+#              (generate_flutter_scene.py --format scene-json), e.g.
+#              work/<id>/model.scene.json — local work is shot without registering it
 #   angles     comma list of model yaw in degrees: 0 front, 90 the model's
 #              right side, 180 rear, 270 its left side — the azimuths
 #              forge/stage4_review/turntable_gate.py expects
@@ -19,8 +22,14 @@ cd "${0:A:h}/../lab"
 model=$1 name=$2 angles=${3:-0} out=${4:-.} backdrop=${5:-dark} layout=${6:-model} elevation=${7:-12}
 [[ -z $model || -z $name ]] && { print -u2 "usage: lab_shot.sh <model> <name> [angles] [out_dir] [backdrop] [layout] [elevation]"; exit 64; }
 [[ $out != /* ]] && out=$OLDPWD/$out
+scene=()
+if [[ $model == *.json ]]; then
+  [[ $model != /* ]] && model=$OLDPWD/$model
+  [[ -f $model ]] || { print -u2 "No such scene file: $model"; exit 66; }
+  scene=(--dart-define=SCENE=$model); model=scene
+fi
 log=$(timeout 300 flutter run -d macos \
-  --dart-define=MODEL=$model --dart-define=SHOT=$name --dart-define=ANGLES=$angles \
+  --dart-define=MODEL=$model "${scene[@]}" --dart-define=SHOT=$name --dart-define=ANGLES=$angles \
   --dart-define=BACKDROP=$backdrop --dart-define=LAYOUT=$layout --dart-define=ELEVATION=$elevation 2>&1) || true
 print -r -- "$log" | grep -i "error\|exception" | head -10
 srcs=(${(f)"$(print -r -- "$log" | grep -o "SHOT /.*png" | cut -c6-)"})

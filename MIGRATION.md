@@ -38,7 +38,9 @@ gaps), **not ported** (three.js only; must not be presented as flutter_scene evi
 
 | Piece | Status | Notes |
 |---|---|---|
-| `lab/` app + `scripts/lab_shot.sh` | ported | macOS. Turntable angles in one launch, backdrops, side-by-side layout, explode |
+| `lab/` app + `scripts/lab_shot.sh` | ported | macOS. Turntable angles in one launch, backdrops, side-by-side layout, explode; loads scene-json from `work/` |
+| scene-json + runtime loader (`--format scene-json`, `loadSceneDescription`) | ported (new) | No three.js counterpart; lets a running app preview a spec |
+| `tool/img2flutterscene_util` (desktop app driving the skill via Claude Code) | ported (new) | macOS. Full UI checked through `UTIL_SHOT` captures; the end-to-end Convert of a real image is not yet exercised (CLI flags, session and resume verified with a trivial prompt) |
 | `forge/stage4_review/*` image gates (diagnose_render, multi-angle, turntable, interior difference, comparison sheet, divine eye, …) | shared | Read PNG/JSON; feed them lab shots. Not yet exercised end-to-end on a real reconstruction |
 | `self_intersection.py` input (`export_mesh_geometry.mjs`) | not ported | Needs a lab mode that dumps world-space triangles as JSON; until then the gate is `unevaluated` |
 | `attachment_anchor.py --measured` input | not ported | Same: needs measured node positions from the lab |

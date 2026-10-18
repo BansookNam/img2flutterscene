@@ -188,6 +188,44 @@ class EmissionTests(unittest.TestCase):
         self.assertEqual(gfs.dart_string("it's $x"), "'it\\'s \\$x'")
 
 
+class SceneJsonTests(unittest.TestCase):
+    """`--format scene-json`: the same model as data, for the runtime's loader."""
+
+    def test_runtime_fixture_is_current(self):
+        """runtime/test/fixtures/sample_hard_case.scene.json backs the Dart loader tests."""
+        scene, _, _ = gfs.build_scene(load(SAMPLE), "form-refinement", "sample_hard_case.json", allow_partial=True)
+        fixture = load(ROOT / "runtime" / "test" / "fixtures" / "sample_hard_case.scene.json")
+        self.assertEqual(
+            fixture,
+            json.loads(json.dumps(scene)),
+            "regenerate the fixture with build_scene(..., 'form-refinement', 'sample_hard_case.json', allow_partial=True)",
+        )
+
+    def test_json_and_dart_describe_the_same_parts(self):
+        scene, _, _ = gfs.build_scene(load(SAMPLE), "form-refinement", "s.json", allow_partial=True)
+        source = gfs.render_dart(scene)
+        self.assertEqual(scene["format"], gfs.SCENE_FORMAT)
+        self.assertEqual(
+            [p["id"] for p in scene["components"]],
+            re.findall(r"nodes\['([^']+)'\] = pivot;", source),
+        )
+        for part in scene["components"]:
+            self.assertIn(gfs.dart_geometry_call(part["geometry"]), source, part["id"])
+
+    def test_cli_writes_json_through_the_same_gates(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            out = Path(tmp) / "m.scene.json"
+            blocked = run(str(SAMPLE), "--out", str(out), "--format", "scene-json")
+            self.assertEqual(blocked.returncode, 2)
+            self.assertFalse(out.exists())
+            result = run(str(SAMPLE), "--out", str(out), "--format", "scene-json", "--allow-partial")
+            self.assertEqual(result.returncode, 0, result.stderr)
+            scene = load(out)
+            self.assertEqual(scene["pass"], "blockout")
+            self.assertEqual([p["id"] for p in scene["components"]], ["root", "lid"])
+            self.assertIn("repetitionSystems (instancing is not ported yet)", scene["omitted"])
+
+
 class DartCompileGateTests(unittest.TestCase):
     """The emitted Dart must compile against runtime/ -- structural tests alone do not prove it."""
 

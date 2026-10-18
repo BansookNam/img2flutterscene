@@ -17,6 +17,8 @@ is ported. Host entrypoints (`~/.claude/skills/img2flutterscene`,
   in one place, `SculptModel.node` — never compensate for it in specs or the generator.
 - `runtime/lib/src/part_builder.dart` mirrors Blue Heaven's; keep additions small and in its style
   so the two can be synced.
+- A user's model lives in `work/<id>/` (gitignored), never in tracked files; see SKILL.md "Local
+  work". Only `lab/` samples the user asked to ship are committed.
 - Keep backward compatibility for existing sculpt specs unless a migration is explicitly planned.
 - When changing schema, gates, generators, runtime or review behavior, add or update focused tests.
 - Keep `SKILL.md`, `README.md`, `CHANGELOG.md`, `ROADMAP.md` and `MIGRATION.md` consistent when
@@ -29,6 +31,7 @@ is ported. Host entrypoints (`~/.claude/skills/img2flutterscene`,
 python3 -m unittest discover -s forge/tests -p 'test_*.py'
 (cd runtime && flutter test && flutter analyze)
 (cd lab && flutter analyze)
+(cd tool/img2flutterscene_util && flutter test && flutter analyze)
 ```
 
 With `flutter` on the PATH, the Python suite compiles generated Dart against `runtime/`; set

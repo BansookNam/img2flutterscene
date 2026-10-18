@@ -56,13 +56,23 @@ class SculptModel {
   final Map<String, SculptComponent> components;
   final Map<String, vm.Vector3> _rest;
 
-  /// Pushes every top-level part away from the model's centre by [amount]
-  /// along its rest offset (0 = assembled) — the "explodable" contract.
+  /// The node carrying [id]'s own mesh — not its child parts, which hang off
+  /// the same pivot. Null for an unknown id or a part with no mesh.
+  Node? meshOf(String id) {
+    for (final child in nodes[id]?.children ?? const <Node>[]) {
+      if (child.mesh != null) return child;
+    }
+    return null;
+  }
+
+  /// Slides every part away from its parent by [amount] along its rest
+  /// offset (0 = assembled) — the "explodable" contract. Offsets compound
+  /// down the hierarchy, so a typical spec (everything hung off one body)
+  /// still comes apart; a part pivoted exactly at its parent's origin stays.
   void explode(double amount) {
     for (final MapEntry(key: id, value: node) in nodes.entries) {
       final rest = _rest[id]!;
-      if (components[id]?.parent != null || rest.length2 < 1e-12) continue;
-      node.position = rest + rest.normalized() * amount;
+      node.position = rest.length2 < 1e-12 ? rest : rest + rest.normalized() * amount;
     }
   }
 }
