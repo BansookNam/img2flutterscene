@@ -1,0 +1,10 @@
+img2flutterscene
+Copyright 2026 the img2flutterscene authors
+
+This product includes software derived from img2threejs
+(https://github.com/img2threejs/img2threejs), licensed under the Apache License, Version 2.0,
+copied at commit d508b59 (v2.0.0): the forge/, grimoire/, docs/, integrations/, skills/ and
+scripts/ trees and the SKILL.md pipeline, with modifications.
+
+runtime/lib/src/part_builder.dart and scripts/trace_silhouette.py are derived from the Blue Heaven
+project.

@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  forge:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.10"
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+      - name: Resolve runtime packages (the compile gate runs pub offline)
+        run: cd runtime && flutter pub get
+      - name: Forge tests, with the generated-Dart compile gate required
+        env:
+          IMG2FLUTTERSCENE_REQUIRE_FLUTTER: "1"
+        run: python3 -m unittest discover -s forge/tests -p 'test_*.py'
+
+  dart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          flutter-version: 3.47.7
+      - name: Runtime
+        run: cd runtime && flutter pub get && flutter analyze && flutter test
+      - name: Lab
+        run: cd lab && flutter pub get && flutter analyze
